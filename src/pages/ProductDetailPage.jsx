@@ -107,25 +107,54 @@ export function ProductDetailPage() {
           </div>
 
           <div className="pd-hero__visual pd-reveal">
-            {/* Fotografía de alta resolución enmarcada estilo editorial */}
-            <div className="pd-photo-frame">
-              <img 
-                src={product.id === 'gruesos' 
-                  ? '/images/hero-gruesos.jpg' 
-                  : '/images/hero-delgados.jpg'} 
-                alt={`Detalle de ${product.title}`}
-                className="pd-photo-img"
-              />
-              <div className="pd-photo-overlay" />
-              
-              {/* Tarjetas flotantes sobre la foto para darle "vida" y métricas */}
+            {/* Visual técnico premium: SVG animado de bobina industrial */}
+            <div className="pd-spool-hero" style={{ '--product-color': visualTheme }}>
+              {/* Anillos orbitales de fondo */}
+              <div className="pd-orbit pd-orbit-1" />
+              <div className="pd-orbit pd-orbit-2" />
+              <div className="pd-orbit pd-orbit-3" />
+
+              {/* Bobina SVG central */}
+              <svg className="pd-spool-svg" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Sombra del suelo */}
+                <ellipse cx="100" cy="248" rx="60" ry="8" fill="rgba(0,0,0,0.12)" />
+                {/* Brida inferior */}
+                <ellipse cx="100" cy="210" rx="72" ry="18" fill="#C8C8C8" />
+                <ellipse cx="100" cy="206" rx="72" ry="18" fill="#D8D8D8" />
+                <ellipse cx="100" cy="204" rx="66" ry="15" fill="#E8E8E8" />
+                {/* Nucleo del cuerpo */}
+                <rect x="34" y="58" width="132" height="150" rx="12" fill="url(#threadGrad)" />
+                {/* Rayas de hilo (líneas diagonales para dar textura) */}
+                <rect x="34" y="58" width="132" height="150" rx="12" fill="url(#stripePattern)" opacity="0.2"/>
+                {/* Brida superior */}
+                <ellipse cx="100" cy="62" rx="72" ry="18" fill="#E8E8E8" />
+                <ellipse cx="100" cy="58" rx="72" ry="18" fill="#D8D8D8" />
+                <ellipse cx="100" cy="56" rx="66" ry="15" fill="#EBEBEB" />
+                {/* Agujero central brida superior */}
+                <ellipse cx="100" cy="56" rx="22" ry="8" fill="#B0B0B0" />
+                <ellipse cx="100" cy="55" rx="18" ry="6" fill="#888" />
+                {/* Reflejo de luz en la bobina */}
+                <rect x="50" y="70" width="30" height="130" rx="8" fill="white" opacity="0.08" />
+                {/* Definiciones */}
+                <defs>
+                  <linearGradient id="threadGrad" x1="34" y1="58" x2="166" y2="208" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor={visualTheme} stopOpacity="0.9" />
+                    <stop offset="100%" stopColor={visualTheme} stopOpacity="0.6" />
+                  </linearGradient>
+                  <pattern id="stripePattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="white" strokeWidth="3" />
+                  </pattern>
+                </defs>
+              </svg>
+
+              {/* Tarjetas flotantes */}
               <div className="pd-floating-metric pd-fm-1">
                 <span className="pd-fm-val">100%</span>
                 <span className="pd-fm-lbl">Poliéster Alta Tenacidad</span>
               </div>
               <div className="pd-floating-metric pd-fm-2">
-                <span className="pd-fm-val">+30</span>
-                <span className="pd-fm-lbl">Tonos Formulados</span>
+                <span className="pd-fm-val">{product.swatches.length}+</span>
+                <span className="pd-fm-lbl">Tonos Disponibles</span>
               </div>
             </div>
           </div>
