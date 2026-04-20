@@ -111,8 +111,8 @@ export function ProductDetailPage() {
             <div className="pd-photo-frame">
               <img 
                 src={product.id === 'gruesos' 
-                  ? 'https://images.unsplash.com/photo-1605374465905-24ce50ea6433?auto=format&fit=crop&q=80&w=800' 
-                  : 'https://images.unsplash.com/photo-1598048145816-1698ebccedef?auto=format&fit=crop&q=80&w=800'} 
+                  ? '/images/hero-gruesos.jpg' 
+                  : '/images/hero-delgados.jpg'} 
                 alt={`Detalle de ${product.title}`}
                 className="pd-photo-img"
               />
