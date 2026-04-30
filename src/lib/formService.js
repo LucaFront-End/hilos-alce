@@ -34,7 +34,7 @@ async function sendEmail(subject, fields) {
 
 async function insertWixItem(collectionId, data) {
   try {
-    await wixClient.items.insert(collectionId, { data });
+    await wixClient.items.insert(collectionId, data);
     return true;
   } catch (err) {
     console.error(`[Wix CMS] Error inserting into ${collectionId}:`, err);
