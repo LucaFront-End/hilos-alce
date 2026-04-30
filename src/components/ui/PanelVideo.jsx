@@ -24,10 +24,9 @@ const SOURCES = {
     'https://videos.pexels.com/video-files/6660936/6660936-uhd_1440_2732_25fps.mp4',
     'https://videos.pexels.com/video-files/9850290/9850290-uhd_1440_2732_25fps.mp4',
   ],
-  // Tapicería industrial / Marroquinería — leather & upholstery sewing
+  // Tapicería industrial / Marroquinería — local compressed video
   thick: [
-    'https://videos.pexels.com/video-files/5710164/5710164-hd_1920_1080_30fps.mp4',
-    'https://videos.pexels.com/video-files/6568946/6568946-uhd_2560_1440_25fps.mp4',
+    '/videos/rope-thick.mp4',
   ],
 };
 
