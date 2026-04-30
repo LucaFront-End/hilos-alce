@@ -83,7 +83,7 @@ export const productLines = [
       'Hilos industriales de gran calibre para aplicaciones de alta carga. Ideal para tapicería, lonas, marroquinería y calzado industrial.',
     color: 'blue',
     specs: [
-      { label: 'Calibres: 1000/2 al 1000/9' },
+      { label: 'Calibres: 1000/2, 1000/3, 1000/4, 1000/5, 1000/6, 1000/9' },
       { label: 'Presentaciones: 125g | 450g | 1kg | 2kg | 4kg' },
       { label: 'Colores: Blanco & Negro (especiales p/pedido)' },
       { label: 'Resistencia a químicos y abrasión' },

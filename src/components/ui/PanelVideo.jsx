@@ -24,10 +24,10 @@ const SOURCES = {
     'https://videos.pexels.com/video-files/6660936/6660936-uhd_1440_2732_25fps.mp4',
     'https://videos.pexels.com/video-files/9850290/9850290-uhd_1440_2732_25fps.mp4',
   ],
-  // Macro stretched rope / thick industrial cord
+  // Tapicería industrial / Marroquinería — leather & upholstery sewing
   thick: [
-    'https://videos.pexels.com/video-files/5291373/5291373-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/3752456/3752456-hd_1920_1080_24fps.mp4',
+    'https://videos.pexels.com/video-files/5710164/5710164-hd_1920_1080_30fps.mp4',
+    'https://videos.pexels.com/video-files/6568946/6568946-uhd_2560_1440_25fps.mp4',
   ],
 };
 

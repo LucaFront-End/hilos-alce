@@ -820,7 +820,7 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
-  color: rgba(247,242,235,0.92);
+  color: rgba(255,255,255,1);
   overflow: hidden;
 }
 
@@ -861,7 +861,8 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.04;
-  color: #F7F2EB;
+  color: #FFFFFF;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.6);
   transition: font-size 0.65s cubic-bezier(0.22,1,0.36,1);
   /* Keep title visible on collapsed panels — only one line */
   white-space: nowrap;
@@ -897,8 +898,9 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
 .pa-panel__desc {
   font-size: 0.95rem;
   line-height: 1.72;
-  color: rgba(247,242,235,0.6);
+  color: rgba(255,255,255,0.82);
   max-width: 44ch;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
 }
 
 /* Spec list */
@@ -911,7 +913,8 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.5;
-  color: rgba(247,242,235,0.55);
+  color: rgba(255,255,255,0.78);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.35);
 }
 .pa-panel__spec-mark {
   color: var(--panel-accent);
@@ -2702,6 +2705,76 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
 .bc-pill:hover { background: var(--bg); border-color: var(--ink-faint); color: var(--ink); }
 .bc-pill--active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .bc-pill--active:hover { background: var(--ink); color: var(--bg); }
+
+/* Custom weight pill */
+.bc-pill--custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border-style: dashed;
+}
+.bc-pill--custom.bc-pill--active {
+  border-style: solid;
+}
+
+/* Custom weight input group */
+.bc-custom-weight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  padding: 1rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  animation: bc-slide-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes bc-slide-in {
+  from { opacity: 0; transform: translateY(-8px); max-height: 0; }
+  to   { opacity: 1; transform: translateY(0);    max-height: 120px; }
+}
+.bc-custom-qty {
+  max-width: 120px;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  text-align: center;
+  padding: 0.6rem 0.75rem !important;
+}
+/* Remove spinner arrows from number input */
+.bc-custom-qty::-webkit-inner-spin-button,
+.bc-custom-qty::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.bc-custom-qty { -moz-appearance: textfield; }
+
+.bc-unit-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.bc-unit-btn {
+  padding: 0.55rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--bg);
+  color: var(--ink-muted);
+  border: none;
+  transition: all 0.2s;
+}
+.bc-unit-btn:first-child { border-right: 1px solid var(--border); }
+.bc-unit-btn:hover { color: var(--ink); background: var(--bg-card); }
+.bc-unit-btn--active {
+  background: var(--ink);
+  color: var(--bg);
+}
+.bc-unit-btn--active:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
 
 .bc-divider { height: 1px; background: var(--border); margin: 0.5rem 0; width: 100%; }
 .bc-label { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Settings, Droplet, Package, Send, CheckCircle2 } from 'lucide-react';
+import { Settings, Droplet, Package, Send, CheckCircle2, Pencil } from 'lucide-react';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export function ThreadBuilder({ product }) {
@@ -17,12 +17,37 @@ export function ThreadBuilder({ product }) {
   const [selectedCaliber, setSelectedCaliber] = useState(calibers[0]);
   const [selectedWeight, setSelectedWeight] = useState('1kg');
   
+  // Personalizado state
+  const [isCustomWeight, setIsCustomWeight] = useState(false);
+  const [customQty, setCustomQty] = useState('');
+  const [customUnit, setCustomUnit] = useState('kg');
+
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+
+  // Computed display weight for receipt
+  const displayWeight = useMemo(() => {
+    if (isCustomWeight && customQty) {
+      return `${customQty}${customUnit}`;
+    }
+    if (isCustomWeight) {
+      return `Personalizado`;
+    }
+    return selectedWeight;
+  }, [isCustomWeight, customQty, customUnit, selectedWeight]);
 
   // --- FÍSICAS DINÁMICAS ---
   // Mapear Peso a Escala (X e Y)
   const spoolTransform = useMemo(() => {
+    if (isCustomWeight) {
+      const qty = parseFloat(customQty) || 0;
+      const inKg = customUnit === 'kg' ? qty : qty / 1000;
+      if (inKg <= 0.125) return 'scaleX(0.7) scaleY(0.7)';
+      if (inKg <= 0.45) return 'scaleX(0.85) scaleY(0.85)';
+      if (inKg <= 1) return 'scaleX(1) scaleY(1)';
+      if (inKg <= 2) return 'scaleX(1.3) scaleY(1.15)';
+      return 'scaleX(1.8) scaleY(1.3)';
+    }
     const w = selectedWeight;
     if (w === '125g') return 'scaleX(0.7) scaleY(0.7)';
     if (w === '450g') return 'scaleX(0.85) scaleY(0.85)';
@@ -30,7 +55,7 @@ export function ThreadBuilder({ product }) {
     if (w === '2kg')  return 'scaleX(1.3) scaleY(1.15)';
     if (w === '4kg')  return 'scaleX(1.8) scaleY(1.3)';
     return 'scaleX(1) scaleY(1)';
-  }, [selectedWeight]);
+  }, [selectedWeight, isCustomWeight, customQty, customUnit]);
 
   // Mapear Calibre a Textura (Repeating Gradient Gap)
   const threadTextureStr = useMemo(() => {
@@ -38,6 +63,15 @@ export function ThreadBuilder({ product }) {
     const gap = thick ? 12 : 4;
     return `repeating-linear-gradient(90deg, transparent, transparent ${gap}px, rgba(255,255,255,0.15) ${gap}px, rgba(255,255,255,0.15) ${thick ? gap*2 : gap*2}px)`;
   }, [selectedCaliber]);
+
+  const handleSelectPreset = (w) => {
+    setSelectedWeight(w);
+    setIsCustomWeight(false);
+  };
+
+  const handleSelectCustom = () => {
+    setIsCustomWeight(true);
+  };
 
   const handleSub = (e) => {
     e.preventDefault();
@@ -86,7 +120,7 @@ export function ThreadBuilder({ product }) {
                 </div>
                 <div className="bp-receipt-row">
                   <span className="bp-receipt-lbl">Suministro:</span>
-                  <span className="bp-receipt-val">{selectedWeight} unit</span>
+                  <span className="bp-receipt-val">{displayWeight} unit</span>
                 </div>
               </div>
             </div>
@@ -139,13 +173,53 @@ export function ThreadBuilder({ product }) {
                 {weights.map(w => (
                   <button
                     key={w} type="button"
-                    className={`bc-pill ${selectedWeight === w ? 'bc-pill--active' : ''}`}
-                    onClick={() => setSelectedWeight(w)}
+                    className={`bc-pill ${!isCustomWeight && selectedWeight === w ? 'bc-pill--active' : ''}`}
+                    onClick={() => handleSelectPreset(w)}
                   >
                     {w}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  className={`bc-pill bc-pill--custom ${isCustomWeight ? 'bc-pill--active' : ''}`}
+                  onClick={handleSelectCustom}
+                >
+                  <Pencil size={14} strokeWidth={2} style={{ marginRight: '4px' }} />
+                  Personalizado
+                </button>
               </div>
+
+              {/* Custom quantity input — slides open when Personalizado is active */}
+              {isCustomWeight && (
+                <div className="bc-custom-weight">
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Cantidad"
+                    className="form-input bc-custom-qty"
+                    value={customQty}
+                    onChange={(e) => setCustomQty(e.target.value)}
+                    autoFocus
+                  />
+                  <div className="bc-unit-toggle">
+                    <button
+                      type="button"
+                      className={`bc-unit-btn ${customUnit === 'g' ? 'bc-unit-btn--active' : ''}`}
+                      onClick={() => setCustomUnit('g')}
+                    >
+                      Gramos
+                    </button>
+                    <button
+                      type="button"
+                      className={`bc-unit-btn ${customUnit === 'kg' ? 'bc-unit-btn--active' : ''}`}
+                      onClick={() => setCustomUnit('kg')}
+                    >
+                      KG
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="bc-divider" />
