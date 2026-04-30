@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MapPin, Phone, Mail, MessageCircle, Send } from 'lucide-react';
 import { siteMeta } from '../../data/content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { submitContactForm } from '../../lib/formService';
 
 const waLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
 
@@ -41,12 +42,40 @@ const industries_options = [
 export function ContactSection() {
   const ref = useScrollReveal();
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // La lógica real de envío (REST API, Wix Headless, etc.) se hará aquí después.
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
+    setSending(true);
+    setSendError(false);
+
+    const fd = new FormData(e.target);
+
+    try {
+      const result = await submitContactForm({
+        nombre: fd.get('nombre') || '',
+        empresa: fd.get('empresa') || '',
+        industria: fd.get('industria') || '',
+        telefono: fd.get('telefono') || '',
+        email: fd.get('email') || '',
+        mensaje: fd.get('mensaje') || '',
+      });
+
+      setSending(false);
+      if (result.success) {
+        setSent(true);
+        setTimeout(() => setSent(false), 5000);
+      } else {
+        setSendError(true);
+        setTimeout(() => setSendError(false), 5000);
+      }
+    } catch (err) {
+      console.error('[Contact] Submit error:', err);
+      setSending(false);
+      setSendError(true);
+      setTimeout(() => setSendError(false), 5000);
+    }
   };
 
   return (
@@ -118,10 +147,17 @@ export function ContactSection() {
                 </div>
 
                 <button type="submit" className="btn btn--accent btn--lg"
+                        disabled={sending}
                         style={{ width: '100%', justifyContent: 'center' }}>
-                  Solicitar Cotización
+                  {sending ? 'Enviando...' : 'Solicitar Cotización'}
                   <Send size={18} strokeWidth={2} />
                 </button>
+
+                {sendError && (
+                  <div style={{ marginTop: '1rem', color: '#E74C3C', fontSize: '0.85rem', textAlign: 'center', fontWeight: '500' }}>
+                    Error al enviar. Intenta de nuevo o contáctanos por WhatsApp.
+                  </div>
+                )}
               </form>
             )}
           </div>

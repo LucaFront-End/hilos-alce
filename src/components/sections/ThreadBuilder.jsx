@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Settings, Droplet, Package, Send, CheckCircle2, Pencil } from 'lucide-react';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { submitProductQuote } from '../../lib/formService';
 
 export function ThreadBuilder({ product }) {
   const ref = useScrollReveal();
@@ -24,6 +25,7 @@ export function ThreadBuilder({ product }) {
 
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [sendError, setSendError] = useState(false);
 
   // Computed display weight for receipt
   const displayWeight = useMemo(() => {
@@ -73,14 +75,39 @@ export function ThreadBuilder({ product }) {
     setIsCustomWeight(true);
   };
 
-  const handleSub = (e) => {
+  const handleSub = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    setTimeout(() => {
+    setSendError(false);
+
+    const formData = new FormData(e.target);
+    const nombre = formData.get('nombre') || '';
+    const email = formData.get('email') || '';
+
+    try {
+      const result = await submitProductQuote({
+        nombre,
+        email,
+        linea: product.title,
+        color: selectedColor,
+        calibre: selectedCaliber,
+        peso: displayWeight,
+      });
+
       setIsSending(false);
-      setIsSent(true);
-      setTimeout(() => setIsSent(false), 4000);
-    }, 1500);
+      if (result.success) {
+        setIsSent(true);
+        setTimeout(() => setIsSent(false), 5000);
+      } else {
+        setSendError(true);
+        setTimeout(() => setSendError(false), 5000);
+      }
+    } catch (err) {
+      console.error('[ThreadBuilder] Submit error:', err);
+      setIsSending(false);
+      setSendError(true);
+      setTimeout(() => setSendError(false), 5000);
+    }
   };
 
   return (
@@ -227,8 +254,8 @@ export function ThreadBuilder({ product }) {
             <div className="bc-group">
               <label className="bc-label">Procesar Modelo</label>
               <div className="form-row">
-                <input required type="text" placeholder="Nombre completo" className="form-input" />
-                <input required type="email" placeholder="Correo corporativo" className="form-input" />
+                <input required type="text" name="nombre" placeholder="Nombre completo" className="form-input" />
+                <input required type="email" name="email" placeholder="Correo corporativo" className="form-input" />
               </div>
             </div>
 
@@ -240,6 +267,12 @@ export function ThreadBuilder({ product }) {
             {isSent && (
               <div style={{ marginTop: '1rem', color: 'var(--accent)', fontSize: '0.85rem', textAlign: 'center', fontWeight: '500' }}>
                 Tu configuración ha sido enrutada al área comercial.
+              </div>
+            )}
+
+            {sendError && (
+              <div style={{ marginTop: '1rem', color: '#E74C3C', fontSize: '0.85rem', textAlign: 'center', fontWeight: '500' }}>
+                Error al enviar. Intenta de nuevo o contáctanos por WhatsApp.
               </div>
             )}
             
