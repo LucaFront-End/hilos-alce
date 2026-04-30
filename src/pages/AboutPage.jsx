@@ -1,9 +1,14 @@
 import { About } from '../components/sections/About';
 import { CTAStrip } from '../components/sections/CTAStrip';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 export function AboutPage() {
   const ref = useScrollReveal();
+  usePageSEO({
+    title: 'Hilos Alce | Fábrica de Hilo Poliéster Industrial de Alta Calidad en México',
+    description: 'Somos una fábrica de hilos industriales especializada en poliéster de alta tenacidad. Soluciones para empresas que buscan calidad, resistencia y consistencia.',
+  });
 
   return (
     <div style={{ paddingTop: '80px' }}>

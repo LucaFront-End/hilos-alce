@@ -1,6 +1,12 @@
 import { ContactSection } from '../components/sections/Contact';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 export function ContactPage() {
+  usePageSEO({
+    title: 'Contacto Hilos Alce | Cotiza Hilo Poliéster Industrial en México',
+    description: 'Solicita cotización de hilos industriales de poliéster. Atención en todo México para empresas maquiladoras. Calidad, entrega y asesoría especializada.',
+  });
+
   return (
     <div style={{ paddingTop: '80px' }}>
       <div style={{ background: 'var(--bg)', paddingTop: '3rem', paddingBottom: '0' }}>

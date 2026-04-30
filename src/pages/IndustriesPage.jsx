@@ -2,9 +2,14 @@ import { industries } from '../data/content';
 import { Link } from 'react-router-dom';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { CTAStrip } from '../components/sections/CTAStrip';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 export function IndustriesPage() {
   const ref = useScrollReveal();
+  usePageSEO({
+    title: 'Hilos Industriales para Textil, Automotriz y Calzado | Hilos Alce México',
+    description: 'Hilos industriales de poliéster para tapicería, calzado, automotriz y más. Alta resistencia, durabilidad y rendimiento en procesos industriales en México.',
+  });
 
   return (
     <div style={{ paddingTop: '80px' }}>

@@ -25,3 +25,6 @@ dist-ssr
 
 # Large source videos
 *.mov
+
+# Documentation PDFs
+*.pdf

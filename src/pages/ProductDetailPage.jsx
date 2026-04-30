@@ -6,14 +6,29 @@ import { CheckCircle2, ChevronRight, Hexagon, Fingerprint } from 'lucide-react';
 import { productLines } from '../data/content';
 import { CTAStrip } from '../components/sections/CTAStrip';
 import { ThreadBuilder } from '../components/sections/ThreadBuilder';
+import { usePageSEO } from '../hooks/usePageSEO';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const PRODUCT_SEO = {
+  'hilos-delgados': {
+    title: 'Hilos Delgados de Poliéster de Alta Tenacidad | Multifilamento Industrial México',
+    description: 'Hilo poliéster delgado de alta tenacidad para industria textil, automotriz y calzado. Alta resistencia, precisión y variedad de calibres y colores.',
+  },
+  'hilos-gruesos': {
+    title: 'Hilos Gruesos de Poliéster de Alta Tenacidad | Hilos Industriales para Lona y Cuero',
+    description: 'Hilos gruesos industriales de poliéster para tapicería, lona y marroquinería. Alta resistencia, durabilidad y desempeño en aplicaciones exigentes.',
+  },
+};
 
 export function ProductDetailPage() {
   const { slug } = useParams();
   const product = productLines.find(p => p.slug === slug);
   const [activeColor, setActiveColor] = useState('transparent');
   const mainRef = useRef(null);
+
+  const seo = PRODUCT_SEO[slug] || {};
+  usePageSEO({ title: seo.title, description: seo.description });
 
   // Forza el scroll al inicio en montar componente
   useEffect(() => {
