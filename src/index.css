@@ -2822,16 +2822,32 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
-  .hero__content { grid-template-columns: 1fr; min-height: auto; padding-top: 4rem; }
+  .hero__content { grid-template-columns: 1fr; min-height: auto; padding-top: 4rem; text-align: center; }
+  .hero__left { align-items: center; }
+  .hero__subtitle { text-align: center; }
+  .hero__actions { justify-content: center; }
+  .hero__stats { justify-content: center; }
   .hero__right { order: -1; }
   .hero__spool-grid { max-width: 400px; margin: 0 auto; }
   .hero__badge--1, .hero__badge--2 { display: none; }
   .industries__inner { grid-template-columns: 1fr; }
-  .industries__tabs { flex-direction: row; flex-wrap: wrap; }
-  .about__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .industries__tabs { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .about__inner { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
+  .ab-left { align-items: center; }
+  .ab-desc { text-align: center; }
+  .ab-meta { align-items: center; }
   .techspecs__tables { grid-template-columns: 1fr; }
   .contact__inner { grid-template-columns: 1fr; }
+  
+  /* Product Detail */
+  .pd-hero__inner { grid-template-columns: 1fr; gap: 3rem; }
+  .pd-hero__content { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .pd-apps-list { justify-content: center; }
+  .pd-actions { justify-content: center; }
+  .builder-grid { grid-template-columns: 1fr; }
+  .builder-preview { position: static; }
 }
+
 @media (max-width: 768px) {
   .navbar__nav, .navbar__actions { display: none; }
   .navbar__hamburger { display: flex; }
@@ -2839,13 +2855,49 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   .product-panel__divider { width: 100%; height: 1.5px; }
   .product-panel { min-height: 320px; }
   .techspecs__props { grid-template-columns: 1fr 1fr; }
-  .hero__stats { flex-direction: column; gap: 1rem; }
+  .hero__stats { flex-direction: column; gap: 1rem; align-items: center; }
   .form-row { grid-template-columns: 1fr; }
   .cursor-dot, .cursor-ring { display: none; }
-  .footer__inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .footer__inner { flex-direction: column; align-items: center; text-align: center; gap: 1.5rem; }
+  
+  /* PA Panels (Products Accordion) */
+  .pa-panels { flex-direction: column; height: 85vh; min-height: 600px; }
+  .pa-panel { min-height: 200px; }
+  .pa-panel--active { flex: 3; }
+  .pa-panel__num { font-size: 14rem; bottom: -5%; right: -5%; }
+  
+  /* Product Detail */
+  .pd-hero { padding-top: 8rem; padding-bottom: 3rem; }
+  .pd-title { font-size: 3.2rem; }
+  .pd-spool-hero { aspect-ratio: auto; padding: 2rem 0; height: auto; flex-direction: column; }
+  .pd-spool-svg { width: 85%; margin-bottom: 2rem; }
+  .pd-floating-metric { position: relative; animation: none !important; transform: none !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; display: inline-flex; margin: 0.5rem; width: 80%; max-width: 300px; text-align: center; }
+  
+  /* Thread Builder Mobile */
+  .builder-preview { padding: 1.5rem; }
+  .bp-spool-graphic { margin-bottom: 2rem; transform: scale(0.85); }
+  .bc-header { justify-content: center; text-align: center; }
+  .bc-colors { justify-content: center; }
+  .bc-pills { justify-content: center; }
+  .bp-receipt-lbl { font-size: 0.65rem; }
+  .bp-receipt-val { font-size: 0.85rem; }
 }
+
 @media (max-width: 480px) {
   .techspecs__props { grid-template-columns: 1fr; }
   .hero__title { font-size: 3rem; }
   .hero__spool-grid { grid-template-columns: repeat(3, 1fr); }
+  .cta-strip__title { font-size: 2.5rem; }
+  
+  .pa-panel__num { font-size: 10rem; }
+  
+  .pd-title { font-size: 2.5rem; }
+  .pd-subtitle { font-size: 1.2rem; }
+  .pd-swatch-grid { gap: 0.5rem; }
+  .pd-swatch { width: calc(25% - 0.5rem); min-width: 50px; }
+  .pd-swatch-fill { width: 48px; height: 48px; border-radius: 12px; }
+  .pd-swatch-more { width: 48px; height: 48px; }
+  
+  .builder-preview { padding: 1rem; }
+  .bc-color-btn { width: 28px; height: 28px; }
 }
