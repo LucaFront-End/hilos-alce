@@ -1265,6 +1265,8 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   box-shadow: 0 32px 80px rgba(13,13,13,0.12);
 }
 
+.ihw-mobile-img { display: none; }
+
 /* Stacked images, cross-fade */
 .ihw-fig {
   position: absolute;
@@ -2902,15 +2904,23 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   .product-panel__cta { opacity: 1; transform: none; }  /* Show CTA always on mobile */
 
   /* PA Panels (Products Accordion) — vertical stack */
-  .pa-section-label { top: 1rem; padding: 0.25rem 0.75rem; }
-  .pa-section-label .t-label { font-size: 0.55rem; }
+  .pa-section-label { display: none; } /* Hide floating label to save space */
+  .pa-panels { flex-direction: column; height: auto !important; min-height: auto !important; gap: 1rem; padding: 1rem; }
+  .pa-panel { height: auto !important; min-height: auto !important; border-radius: 20px; flex: none !important; }
+  .pa-panel__body { opacity: 1 !important; transform: none !important; display: flex !important; grid-template-rows: auto !important; }
+  .acc-stagger { opacity: 1 !important; transform: none !important; }
+  .pa-panel__expand-hint { display: none !important; }
+  .pa-panel__num { font-size: 10rem; bottom: -5%; right: -5%; }
 
   /* Industries Hover Wall */
-  .ihw-row--dim { opacity: 0.45; } /* Better contrast on mobile */
-  .ihw-row__name { font-size: clamp(1.6rem, 5.5vw, 2.4rem); }
-  .ihw-row__body { padding-left: 0; } /* Remove left indent on mobile */
+  .ihw-mobile-img { display: block; width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 1.5rem; }
+  .ihw-preview-wrap { display: none !important; } /* Hide desktop image completely */
+  .ihw-row--dim { opacity: 1 !important; } /* No dimming at all on mobile */
+  .ihw-row__name { font-size: clamp(1.8rem, 6vw, 2.8rem); margin-bottom: 0.5rem; }
+  .ihw-row__body { grid-template-rows: 1fr !important; padding-bottom: 2rem !important; padding-left: 0; }
+  .ihw-appear { opacity: 1 !important; transform: none !important; }
   .ihw-row__right { display: none; } /* Hide badges that overflow */
-  .ihw-row__arrow { opacity: 1; transform: none; } /* Always show arrow */
+  .ihw-row__arrow { display: none; } /* Not an accordion anymore */
   .ihw-dot-badge { display: none; }
 
   /* Tech Specs */

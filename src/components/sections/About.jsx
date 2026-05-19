@@ -10,48 +10,39 @@ export function About() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      // Configuramos el ScrollTrigger principal que ancla (pin) toda la sección
+    let ctx = gsap.matchMedia();
+
+    ctx.add("(min-width: 1025px)", () => {
+      // Desktop: Pinned scroll animation
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=180%', // Cuánto dura el scroll anclado
+          end: '+=180%',
           pin: true,
-          scrub: 1, // Suavidad del scroll
+          scrub: 1,
         },
       });
 
-      // Animamos la tarjeta 1
-      tl.fromTo(
-        '.ab-card-0',
-        { y: '80vh', opacity: 0, rotateZ: 5 },
-        { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 }
-      )
-      // Animamos la tarjeta 2
-      .fromTo(
-        '.ab-card-1',
-        { y: '80vh', opacity: 0, rotateZ: 5 },
-        { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 },
-        '-=0.2'
-      )
-      // Animamos la tarjeta 3
-      .fromTo(
-        '.ab-card-2',
-        { y: '80vh', opacity: 0, rotateZ: 5 },
-        { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 },
-        '-=0.2'
-      )
-      // Animamos la tarjeta 4
-      .fromTo(
-        '.ab-card-3',
-        { y: '80vh', opacity: 0, rotateZ: 5 },
-        { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 },
-        '-=0.2'
-      );
+      tl.fromTo('.ab-card-0', { y: '80vh', opacity: 0, rotateZ: 5 }, { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 })
+        .fromTo('.ab-card-1', { y: '80vh', opacity: 0, rotateZ: 5 }, { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 }, '-=0.2')
+        .fromTo('.ab-card-2', { y: '80vh', opacity: 0, rotateZ: 5 }, { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 }, '-=0.2')
+        .fromTo('.ab-card-3', { y: '80vh', opacity: 0, rotateZ: 5 }, { y: '0vh', opacity: 1, rotateZ: 0, ease: 'power2.out', duration: 1 }, '-=0.2');
+    });
 
-      // Desvanecer sutilmente el bg o hacer algo al final (opcional)
-    }, sectionRef);
+    ctx.add("(max-width: 1024px)", () => {
+      // Mobile/Tablet: Standard scroll reveal (no pinning)
+      gsap.fromTo('.ab-card', 
+        { y: 60, opacity: 0 },
+        { 
+          y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 75%',
+          }
+        }
+      );
+    });
 
     return () => ctx.revert();
   }, []);

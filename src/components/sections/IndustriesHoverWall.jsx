@@ -164,8 +164,9 @@ export function IndustriesHoverWall() {
                 <div
                   className={`ihw-row__body ${isActive ? 'ihw-row__body--open' : ''}`}
                   ref={el => bodyRefs.current[idx] = el}
-                  aria-hidden={!isActive}
+                  aria-hidden={false} /* Always accessible on mobile */
                 >
+                  <img src={INDUSTRY_IMAGES[ind.id]} className="ihw-mobile-img" alt={ind.name} loading="lazy" />
                   <p className="ihw-row__desc ihw-appear">{ind.description}</p>
                   <div className="ihw-row__apps ihw-appear">
                     {ind.applications.map(a => (
