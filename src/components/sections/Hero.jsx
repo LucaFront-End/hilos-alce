@@ -3,13 +3,34 @@ import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { heroContent, siteMeta } from '../../data/content';
 import { ThreadCanvas } from '../ui/ThreadCanvas';
+import { useLanding } from '../../context/LandingContext';
 
-const waLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
+const defaultWaLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
 
-const titleLine1 = ['Hilos', 'de'];
-const titleLine2 = ['Alta', 'Tenacidad'];
+const defaultLine1 = ['Hilos', 'de'];
+const defaultLine2 = ['Alta', 'Tenacidad'];
+
+// Split a title string into two roughly-equal lines of words
+function splitTitle(title) {
+  const words = title.split(/\s+/);
+  if (words.length <= 2) return [words, []];
+  const mid = Math.ceil(words.length / 2);
+  return [words.slice(0, mid), words.slice(mid)];
+}
 
 export function Hero() {
+  const landing = useLanding();
+  const waLink = landing?.whatsappUrl || defaultWaLink;
+
+  // If we have a CMS title override, split it into two animated lines
+  const [titleLine1, titleLine2] = landing?.titulo
+    ? splitTitle(landing.titulo)
+    : [defaultLine1, defaultLine2];
+
+  // Eyebrow text — add ciudad if available
+  const eyebrowText = landing?.ciudad
+    ? `${heroContent.eyebrow} en ${landing.ciudad}`
+    : heroContent.eyebrow;
   const sectionRef  = useRef(null);
   const mousePosRef = useRef({ x: -9999, y: -9999 });
   const eyebrowRef  = useRef(null);
@@ -91,7 +112,7 @@ export function Hero() {
           <div className="hero__eyebrow" ref={eyebrowRef}>
             <span className="hero__eyebrow-dot" />
             <span className="t-label" style={{ color: 'var(--accent)', fontSize: '0.68rem' }}>
-              {heroContent.eyebrow}
+              {eyebrowText}
             </span>
           </div>
 
@@ -113,7 +134,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="hero__subtitle" ref={subtitleRef}>{heroContent.subtitle}</p>
+          <p className="hero__subtitle" ref={subtitleRef}>{landing?.excerpt || heroContent.subtitle}</p>
 
           <div className="hero__actions" ref={actionsRef}>
             <Link to="/contacto" className="btn btn--accent btn--lg">

@@ -3,11 +3,18 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { aboutContent } from '../../data/content';
+import { useLanding } from '../../context/LandingContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function About() {
+  const landing = useLanding();
   const sectionRef = useRef(null);
+
+  // Ciudad-aware description
+  const description = landing?.ciudad
+    ? aboutContent.description.replace('en México', `en ${landing.ciudad}`)
+    : aboutContent.description;
 
   useEffect(() => {
     let ctx = gsap.matchMedia();
@@ -60,13 +67,13 @@ export function About() {
             Fabricación con propósito<br/><em>excepcional.</em>
           </h2>
           <p className="ab-desc">
-            {aboutContent.description}
+            {description}
           </p>
 
           <div className="ab-meta">
             <div className="ab-contact-card">
               <div className="ab-loc-icon"><MapPin size={18} strokeWidth={1.5} /></div>
-              <span>CDMX, México</span>
+              <span>{landing?.ciudad ? `${landing.ciudad}, México` : 'CDMX, México'}</span>
             </div>
             <a href="tel:5510022544" className="ab-contact-card ab-contact-link">
               <div className="ab-loc-icon"><Phone size={18} strokeWidth={1.5} /></div>

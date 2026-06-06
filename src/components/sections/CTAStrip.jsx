@@ -1,10 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useLanding } from '../../context/LandingContext';
 
-const waLink = `https://wa.me/5215510022544?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
+const defaultWaLink = `https://wa.me/5215510022544?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
 
 export function CTAStrip() {
+  const landing = useLanding();
+  const waLink = landing?.whatsappUrl || defaultWaLink;
   const ref = useScrollReveal();
+
+  // Ciudad-aware subtitle
+  const subtitle = landing?.ciudad
+    ? `Nuestro equipo de ventas en ${landing.ciudad} está listo para orientarte sobre el hilo ideal para tu proceso. Cotización sin compromiso.`
+    : 'Nuestro equipo de ventas está listo para orientarte sobre el hilo ideal para tu proceso. Cotización sin compromiso.';
 
   return (
     <section className="cta-strip" ref={ref}>
@@ -12,11 +20,10 @@ export function CTAStrip() {
       <div className="container cta-strip__inner">
         <h2 className="cta-strip__title reveal">
           ¿Listo para elevar<br />
-          <span className="cta-strip__title-em">tu producción?</span>
+          <span className="cta-strip__title-em">tu producción{landing?.ciudad ? ` en ${landing.ciudad}` : ''}?</span>
         </h2>
         <p className="cta-strip__sub reveal delay-1">
-          Nuestro equipo de ventas está listo para orientarte sobre el hilo
-          ideal para tu proceso. Cotización sin compromiso.
+          {subtitle}
         </p>
         <div className="cta-strip__actions reveal delay-2">
           <Link to="/contacto" className="btn btn--light btn--lg">

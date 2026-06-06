@@ -1,7 +1,11 @@
 import { siteMeta } from '../../data/content';
+import { useLanding } from '../../context/LandingContext';
+
+const defaultWaLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola Hilos Alce, me gustaría solicitar información.')}`;
 
 export function FloatingWhatsApp() {
-  const waLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola Hilos Alce, me gustaría solicitar información.')}`;
+  const landing = useLanding();
+  const waLink = landing?.whatsappUrl || defaultWaLink;
 
   return (
     <a
@@ -20,3 +24,4 @@ export function FloatingWhatsApp() {
     </a>
   );
 }
+

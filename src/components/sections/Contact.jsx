@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Phone, Mail, MessageCircle, Send } from 'lucide-react';
 import { siteMeta } from '../../data/content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { submitContactForm } from '../../lib/formService';
+import { useLanding } from '../../context/LandingContext';
 
-const waLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
+const defaultWaLink = `https://wa.me/${siteMeta.whatsapp}?text=${encodeURIComponent('Hola, quiero cotizar hilos Alce.')}`;
 
 const channels = [
   {
@@ -23,7 +25,7 @@ const channels = [
     icon: <MessageCircle size={20} strokeWidth={1.5} />,
     label: 'WhatsApp',
     val: 'Enviar mensaje',
-    href: waLink,
+    href: null,  // will be set dynamically
     external: true,
   },
   {
@@ -40,8 +42,15 @@ const industries_options = [
 ];
 
 export function ContactSection() {
+  const landing = useLanding();
+  const waLink = landing?.whatsappUrl || defaultWaLink;
+
+  // Build channels with resolved WA link
+  const resolvedChannels = channels.map(ch =>
+    ch.label === 'WhatsApp' ? { ...ch, href: waLink } : ch
+  );
   const ref = useScrollReveal();
-  const [sent, setSent] = useState(false);
+  const navigate = useNavigate();
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
 
@@ -64,8 +73,7 @@ export function ContactSection() {
 
       setSending(false);
       if (result.success) {
-        setSent(true);
-        setTimeout(() => setSent(false), 5000);
+        navigate('/gracias');
       } else {
         setSendError(true);
         setTimeout(() => setSendError(false), 5000);
@@ -84,24 +92,13 @@ export function ContactSection() {
         <div style={{ marginBottom: '3rem' }}>
           <span className="t-label reveal" style={{ color: 'var(--accent)' }}>Hablemos</span>
           <h2 className="t-headline reveal delay-1" style={{ marginTop: '0.5rem' }}>
-            Cotiza tu pedido
+            Cotiza tu pedido{landing?.ciudad ? ` en ${landing.ciudad}` : ''}
           </h2>
         </div>
 
         <div className="contact__inner">
           {/* Form */}
           <div className="contact__form-card reveal">
-            {sent ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--accent)' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, marginBottom: '0.5rem' }}>
-                  ¡Mensaje enviado!
-                </h3>
-                <p style={{ color: 'var(--ink-muted)' }}>Te contactaremos a la brevedad.</p>
-              </div>
-            ) : (
               <form onSubmit={handleSubmit} id="contact-form">
                 <div className="form-row">
                   <div className="form-group">
@@ -159,7 +156,6 @@ export function ContactSection() {
                   </div>
                 )}
               </form>
-            )}
           </div>
 
           {/* Info */}
@@ -173,7 +169,7 @@ export function ContactSection() {
             </p>
 
             <div className="contact__channels">
-              {channels.map((ch) => (
+              {resolvedChannels.map((ch) => (
                 <a
                   key={ch.label}
                   href={ch.href}

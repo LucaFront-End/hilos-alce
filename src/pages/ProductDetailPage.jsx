@@ -7,6 +7,8 @@ import { productLines } from '../data/content';
 import { CTAStrip } from '../components/sections/CTAStrip';
 import { ThreadBuilder } from '../components/sections/ThreadBuilder';
 import { usePageSEO } from '../hooks/usePageSEO';
+import { fetchProductDynamicBySlug } from '../lib/productDynamicService';
+import { useSetLanding } from '../context/LandingContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,75 +23,131 @@ const PRODUCT_SEO = {
   },
 };
 
+/**
+ * Match a CMS title to a static product line for swatches/specs/calibers.
+ */
+function matchStaticProduct(dynamicTitle) {
+  const t = (dynamicTitle || '').toLowerCase();
+  if (t.includes('grueso') || t.includes('1000')) {
+    return productLines.find(p => p.id === 'gruesos');
+  }
+  return productLines.find(p => p.id === 'delgados');
+}
+
 export function ProductDetailPage() {
   const { slug } = useParams();
-  const product = productLines.find(p => p.slug === slug);
-  const [activeColor, setActiveColor] = useState('transparent');
   const mainRef = useRef(null);
 
-  const seo = PRODUCT_SEO[slug] || {};
-  usePageSEO({ title: seo.title, description: seo.description });
+  // 1. Try static product first
+  const staticProduct = productLines.find(p => p.slug === slug);
 
-  // Forza el scroll al inicio en montar componente
+  // 2. If not static, try CMS
+  const [dynamic, setDynamic] = useState(null);
+  const [loading, setLoading] = useState(!staticProduct); // only load if not static
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (staticProduct) return; // static product found, skip CMS
+
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+
+    fetchProductDynamicBySlug(slug).then((data) => {
+      if (cancelled) return;
+      if (data) {
+        setDynamic(data);
+      } else {
+        setNotFound(true);
+      }
+      setLoading(false);
+    });
+
+    return () => { cancelled = true; };
+  }, [slug, staticProduct]);
+
+  // Scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  // Hook GSAP Animaciones
+  // Register CMS data for FloatingWhatsApp (only for dynamic products)
+  useSetLanding(dynamic);
+
+  // Determine which product to render and SEO
+  const isDynamic = !staticProduct && !!dynamic;
+  const product = isDynamic ? matchStaticProduct(dynamic.title) : staticProduct;
+
+  const seoTitle = isDynamic ? dynamic.seoTitle : PRODUCT_SEO[slug]?.title;
+  const seoDesc = isDynamic ? dynamic.seoDescription : PRODUCT_SEO[slug]?.description;
+  usePageSEO({ title: seoTitle, description: seoDesc });
+
+  // GSAP Animations
   useEffect(() => {
-    if (!product) return;
+    if (!product || loading) return;
     const ctx = gsap.context(() => {
-      
-      // 1. Hero Reveal Texts
       gsap.fromTo('.pd-reveal', 
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out' }
       );
-
-      // 2. Bento Cards staggered fade-in
       gsap.fromTo('.pd-bento-card',
         { y: 40, opacity: 0, scale: 0.95 },
         { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.1, ease: 'power2.out',
           scrollTrigger: { trigger: '.pd-specs', start: 'top 80%' }
         }
       );
-
-      // 3. Swatches cascade
       gsap.fromTo('.pd-swatch',
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, ease: 'back.out(1.2)',
           scrollTrigger: { trigger: '.pd-colors', start: 'top 75%' }
         }
       );
-
     }, mainRef);
     return () => ctx.revert();
-  }, [product]);
+  }, [product, loading]);
 
-  if (!product) {
+  // ── Loading (CMS fetch) ────────────────────────────────────────
+  if (loading) {
+    return (
+      <main className="landing-loading">
+        <div className="landing-loading__inner">
+          <div className="landing-loading__spinner" />
+          <p className="landing-loading__text">Cargando producto...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // ── 404 ────────────────────────────────────────────────────────
+  if (!product || notFound) {
     return (
       <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 700 }}>
             Línea no encontrada
           </h1>
-          <Link to="/productos" className="btn btn--accent" style={{ marginTop: '1.5rem', display: 'inline-flex' }}>
-            Volver al catálogo
+          <Link to="/" className="btn btn--accent" style={{ marginTop: '1.5rem', display: 'inline-flex' }}>
+            Ir al inicio
           </Link>
         </div>
       </div>
     );
   }
 
-  // Base hue for visual effects based on product identifier
   const visualTheme = product.id === 'gruesos' ? '#3498DB' : '#E74C3C';
+
+  // ── Resolved display values ────────────────────────────────────
+  const displayTitle = isDynamic ? dynamic.title : product.title;
+  const displaySubtitle = isDynamic
+    ? `${product.subtitle}${dynamic.ciudad ? ` — ${dynamic.ciudad}` : ''}`
+    : product.subtitle;
+  const displayDesc = isDynamic ? (dynamic.excerpt || product.description) : product.description;
+  const ctaWhatsapp = isDynamic ? dynamic.whatsappUrl : null;
 
   return (
     <div className="pd-wrapper" ref={mainRef}>
       
-      {/* =========================================
-          FASE 1: HERO CINEMÁTICO
-          ========================================= */}
+      {/* HERO */}
       <section className="pd-hero">
         <div className="container pd-hero__inner">
           <div className="pd-hero__content">
@@ -98,10 +156,10 @@ export function ProductDetailPage() {
               <div className="pd-tag-icon">{product.icon}</div>
             </div>
             
-            <h1 className="pd-title pd-reveal">{product.title}</h1>
-            <div className="pd-subtitle pd-reveal">{product.subtitle}</div>
+            <h1 className="pd-title pd-reveal">{displayTitle}</h1>
+            <div className="pd-subtitle pd-reveal">{displaySubtitle}</div>
             
-            <p className="pd-desc pd-reveal">{product.description}</p>
+            <p className="pd-desc pd-reveal">{displayDesc}</p>
             
             {/* Aplicaciones */}
             <div className="pd-apps pd-reveal">
@@ -114,43 +172,40 @@ export function ProductDetailPage() {
             </div>
 
             <div className="pd-actions pd-reveal">
-              <Link to="/contacto" className="btn btn--accent btn--lg pd-btn">
-                Mandar a producir
-                <ChevronRight size={20} strokeWidth={2.5} />
-              </Link>
+              {ctaWhatsapp ? (
+                <a href={ctaWhatsapp} target="_blank" rel="noopener noreferrer"
+                   className="btn btn--accent btn--lg pd-btn">
+                  Cotizar por WhatsApp
+                  <ChevronRight size={20} strokeWidth={2.5} />
+                </a>
+              ) : (
+                <Link to="/contacto" className="btn btn--accent btn--lg pd-btn">
+                  Mandar a producir
+                  <ChevronRight size={20} strokeWidth={2.5} />
+                </Link>
+              )}
             </div>
           </div>
 
           <div className="pd-hero__visual pd-reveal">
-            {/* Visual técnico premium: SVG animado de bobina industrial */}
             <div className="pd-spool-hero" style={{ '--product-color': visualTheme }}>
-              {/* Anillos orbitales de fondo */}
               <div className="pd-orbit pd-orbit-1" />
               <div className="pd-orbit pd-orbit-2" />
               <div className="pd-orbit pd-orbit-3" />
 
-              {/* Bobina SVG central */}
               <svg className="pd-spool-svg" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Sombra del suelo */}
                 <ellipse cx="100" cy="248" rx="60" ry="8" fill="rgba(0,0,0,0.12)" />
-                {/* Brida inferior */}
                 <ellipse cx="100" cy="210" rx="72" ry="18" fill="#C8C8C8" />
                 <ellipse cx="100" cy="206" rx="72" ry="18" fill="#D8D8D8" />
                 <ellipse cx="100" cy="204" rx="66" ry="15" fill="#E8E8E8" />
-                {/* Nucleo del cuerpo */}
                 <rect x="34" y="58" width="132" height="150" rx="12" fill="url(#threadGrad)" />
-                {/* Rayas de hilo (líneas diagonales para dar textura) */}
                 <rect x="34" y="58" width="132" height="150" rx="12" fill="url(#stripePattern)" opacity="0.2"/>
-                {/* Brida superior */}
                 <ellipse cx="100" cy="62" rx="72" ry="18" fill="#E8E8E8" />
                 <ellipse cx="100" cy="58" rx="72" ry="18" fill="#D8D8D8" />
                 <ellipse cx="100" cy="56" rx="66" ry="15" fill="#EBEBEB" />
-                {/* Agujero central brida superior */}
                 <ellipse cx="100" cy="56" rx="22" ry="8" fill="#B0B0B0" />
                 <ellipse cx="100" cy="55" rx="18" ry="6" fill="#888" />
-                {/* Reflejo de luz en la bobina */}
                 <rect x="50" y="70" width="30" height="130" rx="8" fill="white" opacity="0.08" />
-                {/* Definiciones */}
                 <defs>
                   <linearGradient id="threadGrad" x1="34" y1="58" x2="166" y2="208" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor={visualTheme} stopOpacity="0.9" />
@@ -162,7 +217,6 @@ export function ProductDetailPage() {
                 </defs>
               </svg>
 
-              {/* Tarjetas flotantes */}
               <div className="pd-floating-metric pd-fm-1">
                 <span className="pd-fm-val">100%</span>
                 <span className="pd-fm-lbl">Poliéster Alta Tenacidad</span>
@@ -176,9 +230,7 @@ export function ProductDetailPage() {
         </div>
       </section>
 
-      {/* =========================================
-          FASE 2: CONFIGURADOR DINÁMICO
-          ========================================= */}
+      {/* CONFIGURADOR */}
       <ThreadBuilder product={product} />
 
       <CTAStrip />
