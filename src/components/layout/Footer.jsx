@@ -9,8 +9,7 @@ export function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <Link to="/" className="footer__logo">
-          <span className="footer__logo-mark">HA</span>
-          Hilos Alce
+          <img src="/images/logo.png" alt="Hilos Alce" className="footer__logo-img" />
         </Link>
 
         <nav className="footer__links">

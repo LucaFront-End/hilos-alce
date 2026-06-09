@@ -2375,18 +2375,15 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   flex-wrap: wrap;
 }
 .footer__logo {
-  font-family: var(--font-display);
-  font-size: 1.1rem; font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--bg);
-  display: flex; align-items: center; gap: 0.5rem;
+  display: flex; align-items: center;
+  transition: opacity 0.2s;
 }
-.footer__logo-mark {
-  width: 26px; height: 26px; border-radius: 5px;
-  background: var(--accent);
-  display: grid; place-items: center;
-  font-size: 0.65rem; font-weight: 700;
-  color: white; letter-spacing: 0.04em;
+.footer__logo:hover { opacity: 0.7; }
+.footer__logo-img {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 .footer__links { display: flex; gap: 2rem; flex-wrap: wrap; }
 .footer__link {
