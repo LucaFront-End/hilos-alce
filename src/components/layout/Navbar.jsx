@@ -20,8 +20,7 @@ export function Navbar() {
         <div className="container navbar__inner">
           {/* Logo */}
           <Link to="/" className="navbar__logo" onClick={() => setMenuOpen(false)}>
-            <span className="navbar__logo-mark">HA</span>
-            {siteMeta.name}
+            <img src="/images/logo.png" alt={siteMeta.name} className="navbar__logo-img" />
           </Link>
 
           {/* Desktop Nav */}
