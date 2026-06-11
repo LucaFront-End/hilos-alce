@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Settings, Droplet, Package, Send, CheckCircle2, Pencil } from 'lucide-react';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { submitProductQuote } from '../../lib/formService';
 
 export function ThreadBuilder({ product }) {
   const ref = useScrollReveal();
+  const navigate = useNavigate();
   
   const parseCalibers = () => {
     let raw = product.specs[0].label;
@@ -24,7 +26,6 @@ export function ThreadBuilder({ product }) {
   const [customUnit, setCustomUnit] = useState('kg');
 
   const [isSending, setIsSending] = useState(false);
-  const [isSent, setIsSent] = useState(false);
   const [sendError, setSendError] = useState(false);
 
   // Computed display weight for receipt
@@ -96,8 +97,7 @@ export function ThreadBuilder({ product }) {
 
       setIsSending(false);
       if (result.success) {
-        setIsSent(true);
-        setTimeout(() => setIsSent(false), 5000);
+        navigate('/gracias');
       } else {
         setSendError(true);
         setTimeout(() => setSendError(false), 5000);
@@ -260,15 +260,9 @@ export function ThreadBuilder({ product }) {
             </div>
 
             <button type="submit" className="btn btn--accent btn--lg" disabled={isSending} style={{ width: '100%', marginTop: '1rem', justifyContent: 'center' }}>
-              {isSending ? 'Compilando modelo...' : isSent ? 'Modelo Procesado' : 'Generar Cotización B2B'}
-              {isSent ? <CheckCircle2 size={18} /> : <Send size={18} />}
+              {isSending ? 'Compilando modelo...' : 'Generar Cotización B2B'}
+              <Send size={18} />
             </button>
-            
-            {isSent && (
-              <div style={{ marginTop: '1rem', color: 'var(--accent)', fontSize: '0.85rem', textAlign: 'center', fontWeight: '500' }}>
-                Tu configuración ha sido enrutada al área comercial.
-              </div>
-            )}
 
             {sendError && (
               <div style={{ marginTop: '1rem', color: '#E74C3C', fontSize: '0.85rem', textAlign: 'center', fontWeight: '500' }}>
