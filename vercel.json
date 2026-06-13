@@ -1,9 +1,26 @@
 {
+  "functions": {
+    "api/render.js": {
+      "includeFiles": "dist/index.html"
+    }
+  },
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap.xml" },
-    { "source": "/sitemap-static.xml", "destination": "/api/sitemap-static.xml" },
+    { "source": "/sitemap.xml",          "destination": "/api/sitemap.xml" },
+    { "source": "/sitemap-static.xml",   "destination": "/api/sitemap-static.xml" },
     { "source": "/sitemap-landings.xml", "destination": "/api/sitemap-landings.xml" },
     { "source": "/sitemap-products.xml", "destination": "/api/sitemap-products.xml" },
-    { "source": "/(.*)", "destination": "/index.html" }
+
+    { "source": "/",                     "destination": "/index.html" },
+    { "source": "/industrias",           "destination": "/index.html" },
+    { "source": "/nosotros",             "destination": "/index.html" },
+    { "source": "/contacto",             "destination": "/index.html" },
+    { "source": "/gracias",              "destination": "/index.html" },
+    { "source": "/productos/hilos-delgados", "destination": "/index.html" },
+    { "source": "/productos/hilos-gruesos",  "destination": "/index.html" },
+
+    { "source": "/productos/:slug",      "destination": "/api/render?type=product&slug=:slug" },
+    { "source": "/:slug",                "destination": "/api/render?type=landing&slug=:slug" },
+
+    { "source": "/(.*)",                 "destination": "/index.html" }
   ]
 }
