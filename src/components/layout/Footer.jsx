@@ -18,6 +18,7 @@ export function Footer() {
           <Link to="/industrias"         className="footer__link">Industrias</Link>
           <Link to="/nosotros"           className="footer__link">Nosotros</Link>
           <Link to="/contacto"           className="footer__link">Contacto</Link>
+          <Link to="/zonas"              className="footer__link">Zonas</Link>
           <a href={waLink} target="_blank" rel="noopener noreferrer" className="footer__link">WhatsApp</a>
         </nav>
 

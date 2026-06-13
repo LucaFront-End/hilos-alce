@@ -15,6 +15,7 @@
     { "source": "/nosotros",             "destination": "/index.html" },
     { "source": "/contacto",             "destination": "/index.html" },
     { "source": "/gracias",              "destination": "/index.html" },
+    { "source": "/zonas",                "destination": "/index.html" },
     { "source": "/productos/hilos-delgados", "destination": "/index.html" },
     { "source": "/productos/hilos-gruesos",  "destination": "/index.html" },
 

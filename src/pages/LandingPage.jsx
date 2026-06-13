@@ -18,7 +18,7 @@ import { ContactSection }      from '../components/sections/Contact';
 
 // Known static routes — if the slug matches one of these, skip the CMS lookup
 const STATIC_ROUTES = new Set([
-  'productos', 'industrias', 'nosotros', 'contacto', 'gracias',
+  'productos', 'industrias', 'nosotros', 'contacto', 'gracias', 'zonas',
 ]);
 
 function LandingLoader() {

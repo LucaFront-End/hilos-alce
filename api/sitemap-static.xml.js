@@ -10,6 +10,7 @@ const STATIC_PAGES = [
   { loc: '/industrias',        priority: '0.8', changefreq: 'monthly' },
   { loc: '/nosotros',          priority: '0.7', changefreq: 'monthly' },
   { loc: '/contacto',          priority: '0.8', changefreq: 'monthly' },
+  { loc: '/zonas',             priority: '0.7', changefreq: 'weekly' },
 ];
 
 export default function handler(req, res) {

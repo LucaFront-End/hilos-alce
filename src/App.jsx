@@ -16,6 +16,7 @@ import { AboutPage }             from './pages/AboutPage';
 import { ContactPage }           from './pages/ContactPage';
 import { ThankYouPage }          from './pages/ThankYouPage';
 import { LandingPage }           from './pages/LandingPage';
+import { ZonesPage }             from './pages/ZonesPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -43,6 +44,7 @@ function AppContent() {
         <Route path="/nosotros"                        element={<AboutPage />} />
         <Route path="/contacto"                        element={<ContactPage />} />
         <Route path="/gracias"                         element={<ThankYouPage />} />
+        <Route path="/zonas"                           element={<ZonesPage />} />
         {/* Dynamic CMS landings */}
         <Route path="/:slug"                           element={<LandingPage />} />
         {/* Fallback */}

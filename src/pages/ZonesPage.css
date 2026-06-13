@@ -1,0 +1,315 @@
+/* ══════════════════════════════════════════════
+   ZONES PAGE — Hilos Alce
+   SEO hub page listing all CMS landing pages
+   as a repeater card grid (view page + WhatsApp).
+   Adapted from Velvet pattern, styled to match
+   Hilos Alce design tokens.
+   ══════════════════════════════════════════════ */
+
+/* ── Hero ── */
+.zi-hero {
+  padding: clamp(7rem, 12vw, 10rem) 0 clamp(2.5rem, 5vw, 4rem);
+  background: var(--color-cream, #F7F2EB);
+  position: relative;
+  overflow: hidden;
+}
+
+.zi-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(168, 142, 90, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(168, 142, 90, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.zi-hero-inner {
+  text-align: center;
+  position: relative;
+}
+
+.zi-hero-label {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent, #A88E5A);
+  background: rgba(168, 142, 90, 0.1);
+  border: 1px solid rgba(168, 142, 90, 0.2);
+  padding: 6px 18px;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+}
+
+.zi-hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--text, #1A1A1A);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.zi-hero-title em {
+  font-style: italic;
+  color: var(--accent, #A88E5A);
+}
+
+.zi-hero-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text-muted, #6B6B6B);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── Grid section ── */
+.zi-grid-section {
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  background: var(--surface, #fff);
+}
+
+.zi-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.zi-grid-count {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-muted, #6B6B6B);
+}
+
+.zi-grid-count strong {
+  color: var(--accent, #A88E5A);
+  font-weight: 600;
+}
+
+/* ── Cards grid ── */
+.zi-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 480px) {
+  .zi-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Card ── */
+.zi-card {
+  background: var(--color-cream, #F7F2EB);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.zi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent, #A88E5A), #c7b380);
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zi-card:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+.zi-card:hover::before {
+  opacity: 1;
+}
+
+/* Card header */
+.zi-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  margin-bottom: 0.875rem;
+}
+
+.zi-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(168, 142, 90, 0.08);
+  border: 1px solid rgba(168, 142, 90, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent, #A88E5A);
+}
+
+.zi-card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.zi-card-zona {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text, #1A1A1A);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.zi-card-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted, #6B6B6B);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Card body */
+.zi-card-excerpt {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-muted, #6B6B6B);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card actions */
+.zi-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.zi-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.7rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.zi-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* View page button */
+.zi-btn--page {
+  background: var(--text, #1A1A1A);
+  color: #fff;
+  border: 1.5px solid var(--text, #1A1A1A);
+}
+
+.zi-btn--page:hover {
+  background: #333;
+  border-color: #333;
+  transform: translateY(-1px);
+}
+
+/* WhatsApp button */
+.zi-btn--wa {
+  background: #25d366;
+  color: #fff;
+  border: 1.5px solid #25d366;
+}
+
+.zi-btn--wa:hover {
+  background: #1fb855;
+  border-color: #1fb855;
+  transform: translateY(-1px);
+}
+
+/* ── Loading state ── */
+.zi-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(4rem, 8vw, 8rem) 0;
+}
+
+.zi-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 0, 0, 0.06);
+  border-top-color: var(--accent, #A88E5A);
+  border-radius: 50%;
+  animation: ziSpin 0.7s linear infinite;
+}
+
+@keyframes ziSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Empty state ── */
+.zi-empty {
+  text-align: center;
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  color: var(--text-muted, #6B6B6B);
+}
+
+.zi-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+}
+
+.zi-empty p {
+  font-size: 1rem;
+}
+
+/* ── Reveal animation ── */
+.zi-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zi-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.zi-stagger {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zi-stagger.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
