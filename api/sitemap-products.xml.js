@@ -1,11 +1,16 @@
 // api/sitemap-products.xml.js
-// Vercel Serverless Function — dynamic products sitemap (auto-updates from Wix CMS)
+// Vercel Serverless Function — dynamic products sitemap (real-time from Wix CMS)
+// Uses the SAME slugify + findField logic as render.js so
+// sitemap <loc> always matches the canonical URL.
+
 import { createClient, OAuthStrategy } from '@wix/sdk';
 import { items } from '@wix/data';
 
-const CLIENT_ID = 'a157e7f7-53aa-4b34-9bd7-8cd21ce04875';
-const SITE_URL = 'https://www.hilosalce.mx';
+const CLIENT_ID     = 'a157e7f7-53aa-4b34-9bd7-8cd21ce04875';
+const SITE_URL      = 'https://www.hilosalce.mx';
 const COLLECTION_ID = 'ProductosDinamicas';
+
+// ── Shared helpers (must match render.js exactly) ──────────────
 
 function slugify(str) {
   return (str || '')
@@ -16,6 +21,21 @@ function slugify(str) {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
 }
+
+function findField(obj, ...patterns) {
+  for (const p of patterns) {
+    if (obj[p]) return obj[p];
+  }
+  const keys = Object.keys(obj);
+  for (const p of patterns) {
+    const lower = p.toLowerCase();
+    const match = keys.find(k => k.toLowerCase().includes(lower));
+    if (match && obj[match]) return obj[match];
+  }
+  return '';
+}
+
+// ── Handler ───────────────────────────────────────────────────
 
 export default async function handler(req, res) {
   try {
@@ -30,16 +50,22 @@ export default async function handler(req, res) {
 
     const urls = (productItems || []).map(item => {
       const d = item.data || item;
-      const slug = d.slug || slugify(d.title || d.titulo || '');
+
+      // Resolve slug — same logic as render.js
+      const slug = findField(d, 'slug', 'Slug')
+                || slugify(findField(d, 'title', 'titulo'));
+
+      if (!slug) return '';
+
       const lastmod = d._updatedDate
         ? new Date(d._updatedDate).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0];
 
-      if (!slug) return '';
+      const loc = `${SITE_URL}/productos/${slug}`;
 
       return `
   <url>
-    <loc>${SITE_URL}/productos/${slug}</loc>
+    <loc>${loc}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -52,7 +78,7 @@ ${urls}
 </urlset>`;
 
     res.setHeader('Content-Type', 'application/xml');
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
     res.status(200).send(xml);
   } catch (err) {
     console.error('[Sitemap Products] Error:', err);
