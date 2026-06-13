@@ -22,15 +22,30 @@ function setCache(key, data) {
 
 // ── Field mapping: Wix CMS field names → normalised JS keys ───
 // Wix CMS stores field IDs as camelCase versions of the display name.
-// We map them explicitly so we're decoupled from Wix renaming.
+// With special characters (ñ, accents) the conversion is unpredictable,
+// so we scan all keys for partial matches as a fallback.
+
+function findField(obj, ...patterns) {
+  for (const p of patterns) {
+    if (obj[p]) return obj[p];
+  }
+  const keys = Object.keys(obj);
+  for (const p of patterns) {
+    const lower = p.toLowerCase();
+    const match = keys.find(k => k.toLowerCase().includes(lower));
+    if (match && obj[match]) return obj[match];
+  }
+  return '';
+}
+
 function mapLanding(item) {
   const d = item.data || item;
   
   // Auto-generate slug from title if SLUG field is empty
-  const rawSlug = d.slug || d.sLUG || d.SLUG || '';
+  const rawSlug = findField(d, 'slug', 'sLUG', 'SLUG');
   const autoSlug = rawSlug
     ? rawSlug
-    : (d.titulo || d.title || '')
+    : (findField(d, 'titulo', 'title') || '')
         .toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents
         .replace(/[^a-z0-9\s-]/g, '')
@@ -40,14 +55,14 @@ function mapLanding(item) {
 
   return {
     id:             d._id || d.iD || '',
-    titulo:         d.titulo || d.title || '',
+    titulo:         findField(d, 'titulo', 'title'),
     slug:           autoSlug,
-    ciudad:         d.ciudad || '',
-    palabra:        d.palabra || '',
-    seoTitle:       d.tituloDeSeo || d.tituloDeSEO || d['titulo de seo'] || '',
-    seoDescription: d.metadescripcionDeSeo || d.metadescripciNDeSEO || d['metadescripción de seo'] || '',
-    excerpt:        d.excerpt || '',
-    whatsappUrl:    d.urlDeWhatsapp || d.uRLDeWhatsapp || d['url de whatsapp'] || '',
+    ciudad:         findField(d, 'ciudad'),
+    palabra:        findField(d, 'palabra'),
+    seoTitle:       findField(d, 'tituloDeSeo', 'tituloDeSEO', 'titulo de seo', 'tituloseo'),
+    seoDescription: findField(d, 'metadescripcion', 'metadescripciondeSeo', 'metadescripciNDeSeo', 'metadescripciNDeSEO'),
+    excerpt:        findField(d, 'excerpt'),
+    whatsappUrl:    findField(d, 'urlDeWhatsapp', 'uRLDeWhatsapp', 'url de whatsapp'),
   };
 }
 

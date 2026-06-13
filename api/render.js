@@ -31,6 +31,26 @@ function esc(str) {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Find a field value by checking multiple possible key patterns.
+ * Wix CMS camelCase conversion is unpredictable with ñ, accents, etc.
+ * So we scan all keys for partial matches.
+ */
+function findField(obj, ...patterns) {
+  // 1. Try exact keys first
+  for (const p of patterns) {
+    if (obj[p]) return obj[p];
+  }
+  // 2. Case-insensitive partial match on all keys
+  const keys = Object.keys(obj);
+  for (const p of patterns) {
+    const lower = p.toLowerCase();
+    const match = keys.find(k => k.toLowerCase().includes(lower));
+    if (match && obj[match]) return obj[match];
+  }
+  return '';
+}
+
 // ── Read dist/index.html (cached across warm invocations) ─────
 
 let _html = null;
@@ -95,26 +115,28 @@ export default async function handler(req, res) {
       const { items: rows } = await client.items.query('Landings').find();
       const match = (rows || []).find(item => {
         const d = item.data || item;
-        const s = d.slug || d.sLUG || d.SLUG || slugify(d.titulo || d.title || '');
+        const s = findField(d, 'slug', 'sLUG', 'SLUG') || slugify(findField(d, 'titulo', 'title'));
         return s === slug || s === slug.toLowerCase();
       });
       if (match) {
         const d = match.data || match;
-        seo.title       = d.tituloDeSeo || d.tituloDeSEO || d['titulo de seo'] || '';
-        seo.description = d.metadescripcionDeSeo || d.metadescripciNDeSEO || d['metadescripción de seo'] || '';
+        console.log('[Render] Landing keys:', Object.keys(d).join(', '));
+        seo.title       = findField(d, 'tituloDeSeo', 'tituloDeSEO', 'titulo de seo', 'tituloseo');
+        seo.description = findField(d, 'metadescripcion', 'metadescripciondeSeo', 'metadescripciNDeSeo', 'metadescripciNDeSEO');
         seo.url         = `${SITE_URL}/${slug}`;
       }
     } else if (type === 'product') {
       const { items: rows } = await client.items.query('ProductosDinamicas').find();
       const match = (rows || []).find(item => {
         const d = item.data || item;
-        const s = d.slug || d.Slug || slugify(d.title || d.titulo || '');
+        const s = findField(d, 'slug', 'Slug') || slugify(findField(d, 'title', 'titulo'));
         return s === slug || s === slug.toLowerCase();
       });
       if (match) {
         const d = match.data || match;
-        seo.title       = d.tituloSeo || d.tituloSEO || d['titulo seo'] || '';
-        seo.description = d.metadescripion || d.metadescripiN || d.metadescripcion || '';
+        console.log('[Render] Product keys:', Object.keys(d).join(', '));
+        seo.title       = findField(d, 'tituloSeo', 'tituloSEO', 'titulo seo', 'tituloseo');
+        seo.description = findField(d, 'metadescripcion', 'metadescripion', 'metadescripiN');
         seo.url         = `${SITE_URL}/productos/${slug}`;
       }
     }

@@ -31,21 +31,34 @@ function slugify(str) {
     .replace(/^-|-$/g, '');
 }
 
+function findField(obj, ...patterns) {
+  for (const p of patterns) {
+    if (obj[p]) return obj[p];
+  }
+  const keys = Object.keys(obj);
+  for (const p of patterns) {
+    const lower = p.toLowerCase();
+    const match = keys.find(k => k.toLowerCase().includes(lower));
+    if (match && obj[match]) return obj[match];
+  }
+  return '';
+}
+
 function mapProductDynamic(item) {
   const d = item.data || item;
 
-  const rawSlug = d.slug || d.Slug || '';
-  const autoSlug = rawSlug || slugify(d.title || d.titulo || '');
+  const rawSlug = findField(d, 'slug', 'Slug');
+  const autoSlug = rawSlug || slugify(findField(d, 'title', 'titulo'));
 
   return {
     id:             d._id || '',
-    title:          d.title || d.titulo || '',
+    title:          findField(d, 'title', 'titulo'),
     slug:           autoSlug,
-    ciudad:         d.ciudad || '',
-    seoTitle:       d.tituloSeo || d.tituloSEO || d['titulo seo'] || '',
-    seoDescription: d.metadescripion || d.metadescripiN || d.metadescripcion || '',
-    excerpt:        d.excerpt || '',
-    whatsappUrl:    d.urlDeWhatsapp || d.uRLDeWhatsapp || d['url de whatsapp'] || '',
+    ciudad:         findField(d, 'ciudad'),
+    seoTitle:       findField(d, 'tituloSeo', 'tituloSEO', 'titulo seo', 'tituloseo'),
+    seoDescription: findField(d, 'metadescripcion', 'metadescripion', 'metadescripiN'),
+    excerpt:        findField(d, 'excerpt'),
+    whatsappUrl:    findField(d, 'urlDeWhatsapp', 'uRLDeWhatsapp', 'url de whatsapp'),
   };
 }
 
