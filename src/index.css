@@ -2876,7 +2876,7 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
   .hero { min-height: auto; padding-bottom: 3rem; }
   .hero__content { padding-block: 2rem 1rem; gap: 2rem; }
   .hero__right { display: none; } /* No empty column needed */
-  .hero__title { font-size: clamp(2.8rem, 10vw, 3.8rem); }
+  .hero__title { font-size: clamp(2.2rem, 8vw, 3.2rem); }
   .hero__eyebrow { margin-bottom: 0.5rem; }
   .hero__subtitle { font-size: 0.95rem; }
   .hero__actions { gap: 0.75rem; width: 100%; }
