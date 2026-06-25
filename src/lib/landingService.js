@@ -83,6 +83,7 @@ export async function fetchLandingBySlug(slug) {
     // Query Wix CMS — try the SLUG field first
     const { items } = await wixClient.items
       .query('Landings')
+      .limit(1000)
       .find();
 
     // Since Wix field names can be tricky, we map all items and find by slug
@@ -114,6 +115,7 @@ export async function fetchAllLandings() {
   try {
     const { items } = await wixClient.items
       .query('Landings')
+      .limit(1000)
       .find();
 
     const mapped = (items || []).map(mapLanding);

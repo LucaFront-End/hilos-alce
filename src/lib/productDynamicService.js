@@ -77,6 +77,7 @@ export async function fetchProductDynamicBySlug(slug) {
   try {
     const { items } = await wixClient.items
       .query('ProductosDinamicas')
+      .limit(1000)
       .find();
 
     const allMapped = (items || []).map(mapProductDynamic);
@@ -106,6 +107,7 @@ export async function fetchAllProductDynamics() {
   try {
     const { items } = await wixClient.items
       .query('ProductosDinamicas')
+      .limit(1000)
       .find();
 
     const mapped = (items || []).map(mapProductDynamic);

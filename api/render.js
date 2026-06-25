@@ -112,7 +112,7 @@ export default async function handler(req, res) {
     let seo = { title: '', description: '', url: '' };
 
     if (type === 'landing') {
-      const { items: rows } = await client.items.query('Landings').find();
+      const { items: rows } = await client.items.query('Landings').limit(1000).find();
       const match = (rows || []).find(item => {
         const d = item.data || item;
         const s = findField(d, 'slug', 'sLUG', 'SLUG') || slugify(findField(d, 'titulo', 'title'));
@@ -126,7 +126,7 @@ export default async function handler(req, res) {
         seo.url         = `${SITE_URL}/${slug}`;
       }
     } else if (type === 'product') {
-      const { items: rows } = await client.items.query('ProductosDinamicas').find();
+      const { items: rows } = await client.items.query('ProductosDinamicas').limit(1000).find();
       const match = (rows || []).find(item => {
         const d = item.data || item;
         const s = findField(d, 'slug', 'Slug') || slugify(findField(d, 'title', 'titulo'));

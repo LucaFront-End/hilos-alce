@@ -366,7 +366,7 @@ body.cursor-hover .cursor-dot { background: var(--accent); transform: translate(
 .hero__title-line {
   display: flex;
   gap: 0.22em;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin-bottom: 0.04em;
 }
 /* Interaction label */

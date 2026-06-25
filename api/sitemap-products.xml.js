@@ -46,6 +46,7 @@ export default async function handler(req, res) {
 
     const { items: productItems } = await client.items
       .query(COLLECTION_ID)
+      .limit(1000)
       .find();
 
     const urls = (productItems || []).map(item => {
