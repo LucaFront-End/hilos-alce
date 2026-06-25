@@ -89,7 +89,7 @@ export async function fetchLandingBySlug(slug) {
     // Since Wix field names can be tricky, we map all items and find by slug
     const allMapped = (items || []).map(mapLanding);
     const landing = allMapped.find(
-      (l) => l.slug === slug || l.slug === slug.toLowerCase()
+      (l) => (l.slug || '').toLowerCase() === (slug || '').toLowerCase()
     );
 
     if (landing) {

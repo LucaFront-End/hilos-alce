@@ -9,15 +9,15 @@ export default function handler(req, res) {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>${SITE_URL}/api/sitemap-static.xml</loc>
+    <loc>${SITE_URL}/sitemap-static.xml</loc>
     <lastmod>${today}</lastmod>
   </sitemap>
   <sitemap>
-    <loc>${SITE_URL}/api/sitemap-landings.xml</loc>
+    <loc>${SITE_URL}/sitemap-landings.xml</loc>
     <lastmod>${today}</lastmod>
   </sitemap>
   <sitemap>
-    <loc>${SITE_URL}/api/sitemap-products.xml</loc>
+    <loc>${SITE_URL}/sitemap-products.xml</loc>
     <lastmod>${today}</lastmod>
   </sitemap>
 </sitemapindex>`;

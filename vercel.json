@@ -20,7 +20,7 @@
     { "source": "/productos/hilos-gruesos",  "destination": "/index.html" },
 
     { "source": "/productos/:slug",      "destination": "/api/render?type=product&slug=:slug" },
-    { "source": "/:slug",                "destination": "/api/render?type=landing&slug=:slug" },
+    { "source": "/ciudades/:slug",      "destination": "/api/render?type=landing&slug=:slug" },
 
     { "source": "/(.*)",                 "destination": "/index.html" }
   ]

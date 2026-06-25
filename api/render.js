@@ -1,3 +1,4 @@
+/* global process */
 // api/render.js
 // Vercel Serverless Function — serves index.html with CMS-injected SEO meta tags.
 // Solves the SPA problem: Googlebot gets correct <title> and <meta description>
@@ -116,21 +117,21 @@ export default async function handler(req, res) {
       const match = (rows || []).find(item => {
         const d = item.data || item;
         const s = findField(d, 'slug', 'sLUG', 'SLUG') || slugify(findField(d, 'titulo', 'title'));
-        return s === slug || s === slug.toLowerCase();
+        return (s || '').toLowerCase() === (slug || '').toLowerCase();
       });
       if (match) {
         const d = match.data || match;
         console.log('[Render] Landing keys:', Object.keys(d).join(', '));
         seo.title       = findField(d, 'tituloDeSeo', 'tituloDeSEO', 'titulo de seo', 'tituloseo');
         seo.description = findField(d, 'metadescripcion', 'metadescripciondeSeo', 'metadescripciNDeSeo', 'metadescripciNDeSEO');
-        seo.url         = `${SITE_URL}/${slug}`;
+        seo.url         = `${SITE_URL}/ciudades/${slug}`;
       }
     } else if (type === 'product') {
       const { items: rows } = await client.items.query('ProductosDinamicas').limit(1000).find();
       const match = (rows || []).find(item => {
         const d = item.data || item;
         const s = findField(d, 'slug', 'Slug') || slugify(findField(d, 'title', 'titulo'));
-        return s === slug || s === slug.toLowerCase();
+        return (s || '').toLowerCase() === (slug || '').toLowerCase();
       });
       if (match) {
         const d = match.data || match;

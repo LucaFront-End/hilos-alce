@@ -46,7 +46,7 @@ function AppContent() {
         <Route path="/gracias"                         element={<ThankYouPage />} />
         <Route path="/zonas"                           element={<ZonesPage />} />
         {/* Dynamic CMS landings */}
-        <Route path="/:slug"                           element={<LandingPage />} />
+        <Route path="/ciudades/:slug"                  element={<LandingPage />} />
         {/* Fallback */}
         <Route path="*" element={<HomePage />} />
       </Routes>

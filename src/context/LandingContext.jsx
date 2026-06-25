@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // src/context/LandingContext.jsx
 // Global provider for dynamic CMS page data.
 // Lives at the App level so ALL components (including FloatingWhatsApp) can read it.

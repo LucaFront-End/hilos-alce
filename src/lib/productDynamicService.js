@@ -82,7 +82,7 @@ export async function fetchProductDynamicBySlug(slug) {
 
     const allMapped = (items || []).map(mapProductDynamic);
     const product = allMapped.find(
-      (p) => p.slug === slug || p.slug === slug.toLowerCase()
+      (p) => (p.slug || '').toLowerCase() === (slug || '').toLowerCase()
     );
 
     if (product) {

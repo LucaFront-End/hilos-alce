@@ -62,7 +62,7 @@ export default async function handler(req, res) {
         ? new Date(d._updatedDate).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0];
 
-      const loc = `${SITE_URL}/${slug}`;
+      const loc = `${SITE_URL}/ciudades/${slug}`;
 
       return `
   <url>

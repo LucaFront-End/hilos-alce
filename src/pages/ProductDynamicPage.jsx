@@ -47,12 +47,17 @@ export function ProductDynamicPage() {
   const [dynamic, setDynamic] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [prevSlug, setPrevSlug] = useState(slug);
   const mainRef = useRef(null);
+
+  if (slug !== prevSlug) {
+    setPrevSlug(slug);
+    setLoading(true);
+    setNotFound(false);
+  }
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
 
     fetchProductDynamicBySlug(slug).then((data) => {
       if (cancelled) return;

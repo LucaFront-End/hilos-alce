@@ -1,7 +1,7 @@
 // src/pages/LandingPage.jsx
 // Dynamic landing page — same sections as HomePage but fed with Wix CMS data
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { fetchLandingBySlug } from '../lib/landingService';
 import { useSetLanding }       from '../context/LandingContext';
@@ -16,11 +16,6 @@ import { About }               from '../components/sections/About';
 import { CTAStrip }            from '../components/sections/CTAStrip';
 import { ContactSection }      from '../components/sections/Contact';
 
-// Known static routes — if the slug matches one of these, skip the CMS lookup
-const STATIC_ROUTES = new Set([
-  'productos', 'industrias', 'nosotros', 'contacto', 'gracias', 'zonas',
-]);
-
 function LandingLoader() {
   return (
     <main className="landing-loading">
@@ -34,22 +29,20 @@ function LandingLoader() {
 
 export function LandingPage() {
   const { slug } = useParams();
-  const navigate = useNavigate();
 
   const [landing, setLanding] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [prevSlug, setPrevSlug] = useState(slug);
 
-  // If the slug is a known static route, let React Router handle it
-  useEffect(() => {
-    if (STATIC_ROUTES.has(slug)) {
-      navigate(`/${slug}`, { replace: true });
-      return;
-    }
-
-    let cancelled = false;
+  if (slug !== prevSlug) {
+    setPrevSlug(slug);
     setLoading(true);
     setNotFound(false);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
 
     fetchLandingBySlug(slug).then((data) => {
       if (cancelled) return;
@@ -62,7 +55,7 @@ export function LandingPage() {
     });
 
     return () => { cancelled = true; };
-  }, [slug, navigate]);
+  }, [slug]);
 
   // SEO — set title & description from CMS data
   usePageSEO({

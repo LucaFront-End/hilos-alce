@@ -45,13 +45,18 @@ export function ProductDetailPage() {
   const [dynamic, setDynamic] = useState(null);
   const [loading, setLoading] = useState(!staticProduct); // only load if not static
   const [notFound, setNotFound] = useState(false);
+  const [prevSlug, setPrevSlug] = useState(slug);
+
+  if (slug !== prevSlug) {
+    setPrevSlug(slug);
+    setLoading(!staticProduct);
+    setNotFound(false);
+  }
 
   useEffect(() => {
     if (staticProduct) return; // static product found, skip CMS
 
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
 
     fetchProductDynamicBySlug(slug).then((data) => {
       if (cancelled) return;

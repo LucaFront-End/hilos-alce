@@ -94,8 +94,6 @@ export function TechSpecs() {
         {/* ── Bento Box Grid for Properties ── */}
         <div className="ts-props-grid">
           {techSpecs.props.map((p, i) => {
-            // Extraer números para animar
-            const numMatch = p.val.match(/^(\d+)(.*)/);
             // Casos especiales como "12-22" los dejamos string por simplicidad,
             // pero si es "100", animará de 0 a 100.
             const dataVal = p.val === '100%' ? '100' : p.val;

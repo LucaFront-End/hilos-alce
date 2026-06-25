@@ -49,7 +49,7 @@ const CONFIGS = {
 function rand(min, max) { return min + Math.random() * (max - min); }
 
 class Fiber {
-  constructor(y, cfg, W) {
+  constructor(y, cfg) {
     this.y         = y;
     this.cfg       = cfg;
     this.phase     = rand(0, Math.PI * 2);
